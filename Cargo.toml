@@ -1,0 +1,9 @@
+[package]
+name = "tiny-ver"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "tiny version parser"
+repository = "https://github.com/piot/tiny-ver"
+
+[dependencies]
