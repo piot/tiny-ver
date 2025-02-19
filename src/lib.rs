@@ -26,6 +26,12 @@ pub enum NameError {
     InvalidName(String),
 }
 
+#[derive(Debug, Eq, PartialEq)]
+pub enum SplitError {
+    MissingHyphen,
+    VersionParseError(ParseError),
+}
+
 impl FromStr for TinyVersion {
     type Err = ParseError;
 
@@ -149,4 +155,29 @@ pub fn is_valid_name(name: &str) -> bool {
     }
     // All characters in between must be lower-case letters or underscores.
     name.chars().all(|c| c.is_ascii_lowercase() || c == '_')
+}
+
+/// Splits a versioned name into its package name and version.
+///
+/// # Arguments
+///
+/// * `full_name` - A string in the format produced by [`TinyVersion::versioned_name`],
+///   e.g. `"mypackage-1.2.3"` or `"mypackage-1.2.3-beta"`.
+///
+/// # Returns
+///
+/// A tuple containing the package name and the parsed [`TinyVersion`].
+///
+/// # Errors
+///
+/// Returns a [`SplitError`] if:
+/// - The input does not contain a hyphen (thus, no valid separator between package and version).
+/// - The version part cannot be parsed as a valid [`TinyVersion`].
+pub fn split_versioned_name(full_name: &str) -> Result<(String, TinyVersion), SplitError> {
+    let hyphen_index = full_name.find('-').ok_or(SplitError::MissingHyphen)?;
+    let name = &full_name[..hyphen_index];
+    let version_str = &full_name[hyphen_index + 1..];
+    let version = TinyVersion::from_str(version_str).map_err(SplitError::VersionParseError)?;
+
+    Ok((name.to_string(), version))
 }
