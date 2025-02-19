@@ -6,7 +6,7 @@
 use std::fmt;
 use std::str::FromStr;
 
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Clone, Eq, PartialEq)]
 pub struct TinyVersion {
     major: u32,
     minor: u32,

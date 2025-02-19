@@ -62,6 +62,12 @@ fn valid_strict_pre_release() {
 }
 
 #[test]
+fn clone() {
+    let version: TinyVersion = "1.2.3-rc.1".parse().unwrap();
+    assert_eq!(version.clone().to_string(), "1.2.3-rc.1");
+}
+
+#[test]
 fn valid_names() {
     assert!(is_valid_name("foo"));
     assert!(is_valid_name("foo_bar"));
